@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allergy Diagnosis OX Q&A</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F0F4F8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #2D3748;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: #FFFFFF;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        #question-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            line-height: 1.5;
+            min-height: 120px;
+            margin-bottom: 30px;
+            color: #1A202C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 24px 16px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-o {
+            background-color: #E6FFFA;
+            color: #319795;
+            box-shadow: 0 4px 12px rgba(49, 151, 149, 0.15);
+        }
+        
+        .btn-o:hover { background-color: #B2F5EA; }
+
+        .btn-x {
+            background-color: #FFF5F5;
+            color: #E53E3E;
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.15);
+        }
+        
+        .btn-x:hover { background-color: #FED7D7; }
+
+        .progress-container {
+            width: 100%;
+            background-color: #EDF2F7;
+            border-radius: 12px;
+            height: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #3182CE;
+            width: 16.6%;
+            border-radius: 12px;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .fade-in {
+            opacity: 1;
+            transition: opacity 0.2s ease-in;
+        }
+
+        .result-btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-restart {
+            background-color:#3182CE;
+            color: white;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-restart:hover { background-color: #2B6CB0; }
+
+        .pulse-icon {
+            font-size: 4.5rem;
+            margin-bottom: 16px;
+        }
+
+        .pulse-btn {
+            background-color: #3182CE;
+            color: white;
+            width: 100%;
+            padding: 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: pulseEffect 2s infinite;
+            border: none;
+            cursor: pointer;
+        }
+
+        @keyframes pulseEffect {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(49, 130, 206, 0.5); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(49, 130, 206, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(49, 130, 206, 0); }
+        }
+
+        .product-card {
+            background-color: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transition: border-color 0.3s;
+        }
+        
+        .product-card:hover { border-color: #3182CE; }
+
+        .product-badge {
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background-color: #3182CE;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #2D3748;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        .product-desc {
+            font-size: 0.95rem;
+            color: #4A5568;
+            line-height: 1.5;
+        }
+		.btn-pdf {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 16px;
+            padding: 12px;
+            background-color: #EBF8FF;
+            color: #2B6CB0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 1px solid #90CDF4;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-pdf:hover {
+            background-color: #3182CE;
+            color: #FFFFFF;
+            border-color: #3182CE;
+        }        
+
+        #result-area { display: none; }
+        .result-title { font-size: 1.6rem; font-weight: 800; color: #2B6CB0; margin-bottom: 12px; line-height: 1.3; }
+        .result-desc { font-size: 1.05rem; color: #4A5568; margin-bottom: 24px; line-height: 1.6; }
+        .result-advice { background: #EBF8FF; padding: 18px; border-radius: 16px; font-size: 0.95rem; font-weight: 600; color: #2C5282; border: 1px solid #BEE3F8; }
+        
+        .promo-banner {
+            background: linear-gradient(135deg, #E6FFFA, #B2F5EA);
+            color: #234E52;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-top: 30px;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(56, 178, 172, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="start-screen">
+            <div class="pulse-icon">🤧</div>
+            <h2 style="font-size: 2rem; font-weight: 800; color: #2D3748; margin-top: 10px; line-height: 1.2;">What kind of allergy<br>do I have?</h2>
+            <p style="color: #718096; font-size: 1.1rem; margin-bottom: 40px; line-height: 1.5;">Find out your allergy type<br>with a simple OX Q&A</p>
+            <button class="btn pulse-btn" onclick="startQuiz()">Tap to start 👆</button>
+        </div>
+
+        <div id="quiz-area" style="display: none;">
+            <h1>Diagnosis OX Q&A 🤧</h1>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p id="question-text">Loading question...</p>
+            <div class="btn-group">
+                <button class="btn btn-o" onclick="handleAnswer('O')">
+                    ⭕ <span>Yes</span>
+                </button>
+                <button class="btn btn-x" onclick="handleAnswer('X')">
+                    ❌ <span>No</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="result-area">
+            <h1>What is my allergy type?</h1>
+            <div id="result-content"></div>
+            <div class="promo-banner">
+                Don't ignore the sensitive signals your body is sending.<br>A new standard for multiple allergy diagnosis with a single blood draw! 🔬<br><br><span style="color: #2C7A7B; font-size: 1.1rem;">PROTIA</span>
+            </div>
+            <div class="result-btn-group">
+                <button class="btn btn-restart" onclick="returnToStart()">Return to Home</button>
+            </div>
+        </div>    
+    </div>
+
+    <script>
+        const questions = {
+            'Q1': { text: 'Have you ever experienced sneezing or unknown skin hypersensitivity reactions in a specific season or environment?', o: 'Q2_1', x: 'Q2_2' },
+            'Q2_1': { text: 'Do these symptoms mainly appear through the nose (sneezing/runny nose) or eyes (itching/redness) when coming into contact with changing seasons, dust, or animal hair?', o: 'Q3_1', x: 'Q3_2' },
+            'Q2_2': { text: 'Have you ever had hives of unknown cause on your skin when extremely tired or stressed, although there are no clear allergy symptoms?', o: 'Q3_3', x: 'Q3_4' },
+            'Q3_1': { text: 'Do you suddenly sneeze continuously or feel stuffy when cleaning dusty indoor areas or organizing your closet?', o: 'Q4_1', x: 'Q4_2' },
+            'Q3_2': { text: 'Have you ever felt your lips swell or your throat itch right after eating certain foods like milk, peanuts, shellfish, or fruit?', o: 'Q4_3', x: 'Q4_4' },
+            'Q3_3': { text: 'When wearing metal accessories or using new cosmetics, have you ever experienced redness and itching only on the area in contact with the skin?', o: 'Q4_5', x: 'Q4_6' },
+            'Q3_4': { text: 'Even if you have not experienced symptoms yourself, is there anyone in your immediate family suffering from allergic rhinitis, asthma, or atopic dermatitis?', o: 'Q4_7', x: 'Q4_8' },
+            'Q4_1': { text: 'When breathing cold air or when there is a large temperature difference, have you ever coughed fitfully or wheezed in your chest even though it is not a cold?', o: 'Q5_1', x: 'Q5_2' },
+            'Q4_2': { text: 'Do you repeatedly experience conjunctivitis symptoms such as severe eye swelling and tearing every year after going out or during pollen season?', o: 'Q5_3', x: 'Q5_4' },
+            'Q4_3': { text: 'Have you ever experienced uncomfortable gastrointestinal symptoms such as nausea, abdominal pain, and diarrhea in addition to itching after eating certain foods?', o: 'Q5_5', x: 'Q5_6' },
+            'Q4_4': { text: 'Regardless of meals, have you ever had abnormally large swelling and long-lasting heat compared to others when bitten by an insect or brushed against a specific plant?', o: 'Q5_7', x: 'Q5_8' },
+            'Q4_5': { text: 'Do you get a rash like goosebumps on your skin when sweating heavily, strongly exposed to sunlight, or taking a sudden hot shower?', o: 'Q5_9', x: 'Q5_10' },
+            'Q4_6': { text: 'Does your skin feel extremely tight and flaky with white dead skin cells in the dry winter or right after a shower, causing you to unconsciously scratch it often?', o: 'Q5_11', x: 'Q5_12' },
+            'Q4_7': { text: 'Although it does not interfere with your daily life, do your eyes or throat easily become stinging on days with severe fine dust or when you stay in an enclosed space for a long time?', o: 'Q5_13', x: 'Q5_14' },
+            'Q4_8': { text: 'Have you never experienced hives or difficulty breathing after taking medicine (antibiotics, painkillers, etc.) or getting an injection in your life?', o: 'Q5_15', x: 'Q5_16' },
+            'Q5_1': { text: 'Have you ever woken up because your cough did not stop and got worse right after intense exercise or when you lay down in bed at night?', o: 'Q6_1', x: 'Q6_2' },
+            'Q5_2': { text: 'Do you often breathe through your mouth while sleeping due to severe nasal congestion, or wake up in the morning with an extremely dry and sore throat?', o: 'Q6_3', x: 'Q6_4' },
+            'Q5_3': { text: 'Have you ever experienced stinging and itching on your lips or throat when eating certain raw fruits (apples, peaches, etc.) in spring and autumn?', o: 'Q6_5', x: 'Q6_6' },
+            'Q5_4': { text: 'When you stay in the same space as a pet like a dog or cat for a long time, does a runny nose or itchy eyes become noticeably worse than usual?', o: 'Q6_7', x: 'Q6_8' },
+            'Q5_5': { text: 'Have you ever felt short of breath or dizzy (anaphylaxis) along with hives after eating certain foods, and gone to the emergency room or felt in danger?', o: 'Q6_9', x: 'Q6_10' },
+            'Q5_6': { text: 'Does your mouth itch when eating raw fruits/vegetables, but you have no symptoms when eating them cooked like jam or canned food?', o: 'Q6_11', x: 'Q6_12' },
+            'Q5_7': { text: 'When stung by a bee or bitten by an ant, has the reaction ever spread beyond the bitten area to the whole body, such as systemic swelling or shortness of breath?', o: 'Q6_13', x: 'Q6_14' },
+            'Q5_8': { text: 'Have you ever developed hives or itching only when you walked or ran right after eating food containing wheat flour?', o: 'Q6_15', x: 'Q6_16' },
+            'Q5_9': { text: 'When your body temperature suddenly rises due to severe stress or panic, does your skin sting and swell like a mosquito bite?', o: 'Q6_17', x: 'Q6_18' },
+            'Q5_10': { text: 'When wearing rubber gloves or a band-aid on your skin for a long time, has the contacted area ever swollen red and oozed?', o: 'Q6_19', x: 'Q6_20' },
+            'Q5_11': { text: 'When you were young (infancy), did you ever suffer from fever or severe eczema (atopy) in skin folds such as behind the knees or inside the elbows?', o: 'Q6_21', x: 'Q6_22' },
+            'Q5_12': { text: 'Have you ever noticed your skin becoming particularly itchy and red only when wearing clothes with plenty of specific detergents or fabric softeners?', o: 'Q6_23', x: 'Q6_24' },
+            'Q5_13': { text: 'Do you get a severe headache or continuous dry cough when you smell sick building syndrome (furniture, paint, etc.) or strong perfume?', o: 'Q6_25', x: 'Q6_26' },
+            'Q5_14': { text: 'When you catch a cold, do your runny nose or cough last unusually longer than others (more than a month) and not go away easily?', o: 'Q6_27', x: 'Q6_28' },
+            'Q5_15': { text: 'Have you ever had blisters around your lips or itchy skin when extremely fatigued or severely sleep-deprived?', o: 'Q6_29', x: 'Q6_30' },
+            'Q5_16': { text: 'Have your eyelids or lips ever swollen up (angioedema) after taking penicillin antibiotics or pain relievers/anti-inflammatory drugs?', o: 'Q6_31', x: 'Q6_32' },
+            'Q6_1': { text: 'Have you been diagnosed with asthma in the past or prescribed and used an inhaler (e.g., Ventolin) for shortness of breath?', o: 'R5', x: 'R5' },
+            'Q6_2': { text: 'When a cough lasts a long time, does it tend to be a dry cough with a ticklish throat that lasts for more than 2 weeks rather than producing phlegm?', o: 'R5', x: 'R16' },
+            'Q6_3': { text: 'Is your runny nose clear and transparent rather than yellow and sticky, and do the areas around your nose and eyes itch frequently?', o: 'R3', x: 'R4' },
+            'Q6_4': { text: 'Do you sneeze fitfully 3-4 times or more in a row when exposed to cold wind or going to a dusty place?', o: 'R3', x: 'R16' },
+            'Q6_5': { text: 'When peeling fruits like apples and peaches, does your skin become red and itchy just by the juice touching your hands or the skin around your mouth?', o: 'R8', x: 'R8' },
+            'Q6_6': { text: 'In addition to raw fruits, have you ever felt your throat tighten or swell when eating nuts like peanuts, walnuts, or almonds?', o: 'R7', x: 'R8' },
+            'Q6_7': { text: 'Does the skin area licked by a dog or cat swell up like a mosquito bite or develop hives?', o: 'R6', x: 'R6' },
+            'Q6_8': { text: 'When you leave an animal-inhabited space and go outside, do your runny nose or itching completely disappear within 1-2 hours?', o: 'R6', x: 'R3' },
+            'Q6_9': { text: 'Is it a daily routine for you to meticulously ask and check if specific allergy-inducing ingredients are included every time you go to a restaurant?', o: 'R7', x: 'R7' },
+            'Q6_10': { text: 'Do you exactly know what foods you are allergic to through hospital allergy tests?', o: 'R7', x: 'R7' },
+            'Q6_11': { text: 'When your mouth itches after eating raw fruits/vegetables, do the symptoms subside quickly if you take allergy medication (antihistamine)?', o: 'R8', x: 'R8' },
+            'Q6_12': { text: 'Do you sneeze or feel suffocated just by smelling a certain food or inhaling the smoke from someone cooking?', o: 'R14', x: 'R8' },
+            'Q6_13': { text: 'Do you extremely avoid outdoor activities for fear of being bitten by bugs or insects, or always thoroughly prepare repellents and long clothes?', o: 'R13', x: 'R13' },
+            'Q6_14': { text: 'Have you ever had the swelling and heat of a mosquito or bug bite fail to subside within a day or two and remain swollen for over a week?', o: 'R13', x: 'R16' },
+            'Q6_15': { text: 'In addition to flour, have you ever experienced hives or shortness of breath when exercising after eating crustaceans like shrimp or crabs?', o: 'R9', x: 'R9' },
+            'Q6_16': { text: 'Regardless of meals, does your skin itch and sting only when your heart rate goes up enough to simply make your body hot or sweat?', o: 'R11', x: 'R2' },
+            'Q6_17': { text: 'Do goosebump-like hives appear on your neck or chest even when eating spicy food or when your face turns red from anger?', o: 'R11', x: 'R11' },
+            'Q6_18': { text: 'Does your skin suddenly turn red and itchy when you go from a cold outdoor area to a warm indoor area in winter?', o: 'R11', x: 'R2' },
+            'Q6_19': { text: 'Have you ever had oozing or itching on the area where nickel-containing earrings, necklaces, or metal trouser buttons touch your skin?', o: 'R10', x: 'R10' },
+            'Q6_20': { text: 'Have you ever received dermatological treatment because your entire face or scalp severely broke out after changing cosmetics, shampoo, or hair dye?', o: 'R10', x: 'R16' },
+            'Q6_21': { text: 'Even now as an adult, if you are stressed or tired, does the area where you had eczema as a child become itchy and flaky again?', o: 'R12', x: 'R12' },
+            'Q6_22': { text: 'When your skin is extremely dry, does applying plenty of moisturizer (lotion/cream) eliminate itching and make your skin comfortable?', o: 'R12', x: 'R12' },
+            'Q6_23': { text: 'When you buy new clothes and wear them right away without washing, is your skin itchy and stinging, so you must always wash them once before wearing?', o: 'R10', x: 'R14' },
+            'Q6_24': { text: 'On days with severe fine dust or yellow dust, does your exposed skin (face, neck, etc.) become particularly itchy or red after returning from an outing?', o: 'R14', x: 'R16' },
+            'Q6_25': { text: 'Do you cough instantly and have a sore throat not only from strong air freshener scents but also when exposed to cigarette smoke or exhaust fumes?', o: 'R14', x: 'R14' },
+            'Q6_26': { text: 'Does your nose become stuffy or your eyes sting when entering an unventilated basement or an old building (where there is mold)?', o: 'R3', x: 'R16' },
+            'Q6_27': { text: 'Even if you do not usually have a runny nose, do you often feel like mucus is draining down the back of your throat (postnasal drip) or feel a lump in your throat?', o: 'R3', x: 'R16' },
+            'Q6_28': { text: 'Have you ever gone to the hospital thinking it was a cold every change of season, only to be told "These are symptoms of allergic rhinitis"?', o: 'R3', x: 'R4' },
+            'Q6_29': { text: 'When you get cold sores due to fatigue, do you sensitively experience sneezing or itching even in environments that are usually fine?', o: 'R2', x: 'R2' },
+            'Q6_30': { text: 'Do you confidently believe you have a healthy constitution with absolutely no foods or environments to avoid at present?', o: 'R1', x: 'R16' },
+            'Q6_31': { text: 'Before receiving a prescription or injection at a hospital, do you tend to inform the doctor or pharmacist in advance of your past experiences with drug side effects?', o: 'R15', x: 'R15' },
+            'Q6_32': { text: 'In your entire life, have you never been diagnosed with an allergy or prescribed medication due to any factor such as food, environment, or medication?', o: 'R1', x: 'R16' }
+        };
+
+        const results = {
+            'R1': { 
+                title: 'Perfect Defense! Flawless Steel Immune Constitution 🛡️', 
+                desc: 'You have a blessed constitution that remains unfazed by dust, food, or pollen. You are far from allergies and enjoy a comfortable daily life.', 
+                advice: '💡 Just maintain regular eating habits and exercise to keep up your excellent immunity!',
+                product: 'PROTIA Food IgG Panel',
+                productDesc: 'If you have no allergies but suffer from unexplained chronic fatigue? Find the hidden cause with a delayed food hypersensitivity test tailored for Koreans.'
+            },
+            'R2': { 
+                title: 'Fatigue-Accumulated Pseudo-Allergy 🔋', 
+                desc: 'You do not have underlying allergies, but when extremely tired or stressed, your skin temporarily becomes itchy or your condition deteriorates.', 
+                advice: '💡 The cause is not an allergen but "stress and fatigue." Get plenty of rest, and the symptoms will disappear like magic.',
+                product: 'PROTIA Food IgG Panel',
+                productDesc: 'The cause of unexplained fatigue and itchy skin might be a leaky gut. Check if there are any foods you eat daily that do not agree with you.'
+            },
+            'R3': { 
+                title: 'Sniffle Sniffle, Indoor Environment Detector 🏠', 
+                desc: 'You have a chronic allergic rhinitis type that reacts to indoor factors like house dust mites and mold. Your nose reacts first when you enter unventilated places.', 
+                advice: '💡 Regular hot water washing of bedding and indoor humidity control (40-50%) are essential.',
+                product: 'PROTIA Allergy-Q Respiratory Panel / Comprehensive Panel',
+                productDesc: 'Thoroughly screen for causal antigens that plague the respiratory tract, such as house dust mites, mold, and pet dander, with a single blood draw.'
+            },
+            'R4': { 
+                title: 'Human Weather Forecaster Sensitive to Spring/Autumn 🌸', 
+                desc: 'You have a seasonal rhinitis type where sneezing and itchy eyes (conjunctivitis) invariably start during the change of seasons when pollen flies or cold winds blow.', 
+                advice: '💡 Refrain from going out on days with heavy pollen, and wearing a mask and glasses when going out is a great help.',
+                product: 'PROTIA Allergy-Q Respiratory Panel / Comprehensive Panel',
+                productDesc: 'Accurately diagnose the exact cause irritating your nose, including various pollen antigens that fly during different periods, such as trees, grasses, and weeds.'
+            },
+            'R5': { 
+                title: 'Breath-Taking! Sensitive Bronchi 💨', 
+                desc: 'You have a predisposition to asthma where coughing fitfully occurs or your breathing sounds rough when exposed to cold air, dust, fumes, or when exercising vigorously.', 
+                advice: '💡 Drink warm water frequently so your respiratory tract does not dry out, and be careful of sudden temperature changes.',
+                product: 'PROTIA Allergy-Q Respiratory / Comprehensive Panel',
+                productDesc: 'Extensively test for micro-antigens that irritate the bronchi to find the fundamental trigger substances of asthma and respiratory diseases.'
+            },
+            'R6': { 
+                title: 'Online Butler Loving Only with the Heart 🐾', 
+                desc: 'You have an allergy reacting to animal dander, saliva, and hair, such as dogs or cats. Symptoms appear immediately when you go to a space with animals.', 
+                advice: '💡 Avoid direct contact with pets, and if you inevitably touch them, you must wash your hands immediately and brush off your clothes.',
+                product: 'PROTIA Allergy-Q Respiratory Panel / Comprehensive Panel',
+                productDesc: 'Accurately quantifies and shows hypersensitivity reactions to various furry animal antigens, including dogs and cats, as well as hamsters and guinea pigs.'
+            },
+            'R7': { 
+                title: 'Ingredient List Reading Mandatory! Picky Gourmet 🚫', 
+                desc: 'You have a severe food allergy type that reacts immediately when eating certain foods like peanuts or crustaceans. For this type, allergy components are not destroyed even when baked or fried at high temperatures.', 
+                advice: '💡 Always asking if allergy-inducing substances are included before ordering at a restaurant and strictly watching out for cross-contamination is a habit that saves lives.',
+                product: 'PROTIA Allergy-Q Food Panel / Comprehensive Panel',
+                productDesc: 'Finds acute allergy-causing foods that can be fatal, from major ingredients frequently consumed by Koreans to nuts and seafood.'
+            },
+            'R8': { 
+                title: 'Cooked is OK! Raw Fruit Discriminator 🍎', 
+                desc: 'You have "Oral Allergy Syndrome" where your lips and throat itch when eating raw fruits or vegetables. The causative protein is weak to heat, so it is fine if cooked.', 
+                advice: '💡 You can enjoy them safely without symptoms if you cook them with heat or eat them in processed forms (canned, jam, juice).',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Extensively tests both respiratory and food antigens simultaneously to check for cross-reactivity between pollen allergies and raw fruits.'
+            },
+            'R9': { 
+                title: 'Absolute Rest After Meals! Relaxation Required Type 🏃‍♂️', 
+                desc: 'You have a peculiar constitution where eating a certain food (like wheat flour) alone is fine, but allergy reactions like hives explode only when you run or exercise right after eating.', 
+                advice: '💡 It is most important to avoid strenuous exercise for at least 2 hours after a meal and digest quietly.',
+                product: 'PROTIA Allergy-Q Food Panel / Comprehensive Panel',
+                productDesc: 'Precisely diagnoses reaction levels to specific food antigens like wheat and crustaceans, which are the main culprits of exercise-induced anaphylaxis.'
+            },
+            'R10': { 
+                title: 'Noble Skin Allowing Only Pure Cotton and Pure Gold ✨', 
+                desc: 'You have a contact dermatitis type where skin oozes and turns red when touched by metal jewelry like nickel, rubber (latex), specific cosmetics, or hair dyes.', 
+                advice: '💡 Use accessories made of 18K gold or higher or allergy-free materials, and pre-test new cosmetics on your skin.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Metal allergies require dermatological treatment (patch test), but we test for allergies to latex or certain chemicals.'
+            },
+            'R11': { 
+                title: 'Extreme Temperature Detection Sensor 🌡️', 
+                desc: 'When you suddenly heat up and sweat (cholinergic) or move from a cold place to a warm place (cold-induced), your skin stings and goosebump-like hives appear.', 
+                advice: '💡 It is good to avoid sudden body temperature changes and gradually adapt your body to hot or cold environments.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'In addition to physical factors, check if IgE levels in the blood are generally high to grasp underlying complex allergy tendencies.'
+            },
+            'R12': { 
+                title: 'Drought Skin Craving Moisture 💧', 
+                desc: 'Your skin barrier is weak, so it easily becomes dry and flaky. You have a predisposition to fever or atopy from childhood, often feeling itchy.', 
+                advice: '💡 Applying plenty of fragrance-free/highly moisturizing cream within 3 minutes after a shower to protect the skin barrier is the best treatment.',
+                product: 'PROTIA Allergy-Q Atopy Panel',
+                productDesc: 'Focuses on diagnosing major food and environmental antigens that affect the exacerbation of atopic dermatitis in infants and adults.'
+            },
+            'R13': { 
+                title: 'Nature Alert Posture Fearing the Wild 🐝', 
+                desc: 'When bitten by insects like bees or ants or brushing against certain plants, you swell up much more severely than others and can experience systemic reactions like shortness of breath.', 
+                advice: '💡 Always wear long clothes when hiking or doing outdoor activities, and avoid strong perfumes or flashy clothes that attract bees.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Simultaneously tests an extensive 118 kinds of causal substances you might encounter in daily life, including insect venom (honeybees, hornets, etc.).'
+            },
+            'R14': { 
+                title: 'Fumes/Odor Discriminator, Human Air Purifier 🌬️', 
+                desc: 'You have a hypersensitive constitution where headaches, coughing, and a runny nose pour out when exposed to specific chemicals or irritating odors like new furniture smell, strong perfume, or cigarette smoke.', 
+                advice: '💡 It is recommended to patronize eco-friendly materials and ensure sufficient ventilation when entering a new space.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Screens whether it is simple olfactory hypersensitivity or if there are actually mixed allergic reactions caused by specific mold or dust antigens.'
+            },
+            'R15': { 
+                title: 'Medication Alert! Meticulous Recorder 💊', 
+                desc: 'You have a drug allergy type where your eyelids have swollen or you broke out in hives when taking specific antibiotics or pain relievers/anti-inflammatory drugs.', 
+                advice: '💡 Be sure to inform in advance about medications you had side effects from when getting medical treatment or a prescription at a pharmacy.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Evaluates whether you have a constitution with high basic immune hypersensitivity and checks for other accompanying allergy antigens to watch out for besides drugs.'
+            },
+            'R16': { 
+                title: 'Potential Time Bomb Unknown When to Explode 💣', 
+                desc: 'Currently, there are no distinct symptoms, but you have a genetic predisposition (family history) or hidden allergic inflammation, so allergies can manifest anytime depending on the situation.', 
+                advice: '💡 Even if you are fine right now, pay attention to condition management as allergies can develop if you are extremely tired or your immunity drops.',
+                product: 'PROTIA Allergy-Q Comprehensive Panel',
+                productDesc: 'Check definitively with a single multiple screening test to see if there are any allergy-inducing factors in your body that even you did not know about.'
+            }
+        };
+        
+        let currentQuestionId = 'Q1';
+        let currentStep = 1;
+        let idleTimer;
+        
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => {
+                if (document.getElementById('start-screen').style.display === 'none') {
+                    returnToStart();
+                }
+            }, 30000);
+        }
+
+        document.body.addEventListener('click', resetIdleTimer);
+        document.body.addEventListener('touchstart', resetIdleTimer);
+
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('result-area').style.display = 'none';
+            
+            currentQuestionId = 'Q1';
+            currentStep = 1;
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.transition = 'none';
+            renderQuestion();
+            setTimeout(() => { progressBar.style.transition = 'width 0.4s ease-in-out'; }, 50);
+        }
+
+        function renderQuestion() {
+            const qText = document.getElementById('question-text');
+            qText.classList.remove('fade-out');
+            qText.classList.add('fade-in');
+            qText.innerText = questions[currentQuestionId].text;
+
+            const progressPercent = (currentStep / 6) * 100;
+            document.getElementById('progress-bar').style.width = progressPercent + '%';
+        }
+
+        function handleAnswer(answer) {
+            const qText = document.getElementById('question-text');
+            qText.classList.remove('fade-in');
+            qText.classList.add('fade-out');
+
+            setTimeout(() => {
+                const nextNode = answer === 'O' ? questions[currentQuestionId].o : questions[currentQuestionId].x;
+
+                if (nextNode.startsWith('R')) {
+                    showResult(nextNode);
+                } else {
+                    currentQuestionId = nextNode;
+                    currentStep++;
+                    renderQuestion();
+                }
+            }, 300);
+        }
+
+		function showResult(resultId) {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-area').style.display = 'block';
+            
+            const resData = results[resultId];
+            
+            // 공통 브로셔 PDF 경로 설정 (실제 경로 또는 URL로 변경해주세요)
+            const commonPdfUrl = './brochures/PROTIA_Common_Brochure.pdf'; 
+            
+            document.getElementById('result-content').innerHTML = `
+                <div class="result-title">${resData.title}</div>
+                <div class="result-desc">${resData.desc}</div>
+                <div class="result-advice">${resData.advice}</div>
+                
+                <div class="product-card">
+                    <div class="product-badge">Customized Test Recommendation</div>
+                    <div class="product-name">${resData.product}</div>
+                    <div class="product-desc">${resData.productDesc}</div>
+                    <a href="${commonPdfUrl}" target="_blank" class="btn-pdf">View Detailed Brochure 📄</a>
+                </div>
+            `;
+        }
+                
+        function returnToStart() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-area').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '16.6%';
+        }
+        
+        renderQuestion();
+    </script>
+</body>
+</html>
